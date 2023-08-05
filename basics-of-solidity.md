@@ -25,16 +25,16 @@ contract Enums {
     Status public status;
 
     // uint يعيد قيم من النوع
-    // Pending  - 0
-    // Shipped  - 1
-    // Accepted - 2
-    // Rejected - 3
-    // Canceled - 4
+    // Pending  = 0
+    // Shipped  = 1
+    // Accepted = 2
+    // Rejected = 3
+    // Canceled = 4
     function get() public view returns (Status) {
         return status;
     }
 
-    // في الدالة uint تحديث الحاللة عن طريق ادخال
+    // في الدالة uint تحديث الحالة عن طريق ادخال قيمة من النوع
     function set(Status _status) public {
         status = _status;
     }
@@ -67,7 +67,7 @@ contract SampleStruct {
     // Employee قم بإنشاء مصفوفة من
     Employee[] public employees;
 
-    // Employee قم بأدخال البيانات التي تريد إضافتها الى
+    // Employee قم بإدخال البيانات التي تريد إضافتها الى
     function addEmployee(string memory _name, uint _age, uint _salary) public {
         Employee memory newEmployee = Employee(_name, _age, _salary);
         employees.push(newEmployee);
