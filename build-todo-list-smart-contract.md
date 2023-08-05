@@ -25,7 +25,7 @@ cd Todolist-Dapp/
 ```bash
 npm init --yes
 npm install --save-dev hardhat
-npm install --save-dev @nomicfoundation/hardhat-toolbox
+npm install --save-dev @nomicfoundation/hardhat-toolbox@2
 ```
 
 سنقوم الان بتشغيل تطبيق Hardhat
