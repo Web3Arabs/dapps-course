@@ -3,25 +3,20 @@
 بعد ان انتهينا من كتابة عقدنا الذكي وتجربته بشكل كامل واختباره يمكننا الان رؤيته يعمل على الواجهة الامامية (Front-end).
 
 ## المتطلبات الاساسية للبدء في هذا الدرس:
-1- "انتهيت من قراءة درس "إنشاء عقد ذكي لمشروع Todo-list. <br/>
-2- يمكنك التعامل مع لغة البرمجة JavaScript. <br/>
-3- يمكنك االتعامل مع مكتبة React/Nextjs.
 
-سنقوم بإستخدام منصة <a href="https://floatui.com/" target="_blank">FloatUI</a> من اجل الحصول على بعض المكونات التي ستساعدنا في بناء واجهة امامية باستخدام Reactjs و TailwindCSS بكل سهولة.
+1. انتهيت من قراءة درس "<a href="https://www.web3arabs.com/courses/d64bee08-2e38-4ad5-958e-5ab6c42ebb41/lessons/f426338c-23db-463f-9f6a-74a4d9c02b91" target="_blank">إنشاء عقد ذكي لمشروع Todo-list</a>"
+2. يمكنك التعامل مع لغة البرمجة JavaScript.
+3. يمكنك التعامل مع **<a href="https://www.web3arabs.com/courses/d64bee08-2e38-4ad5-958e-5ab6c42ebb41/lessons/bb49c32a-911f-4a71-b6e5-3c5f5f981360" target="_blank">مكتبة React/Nextjs</a>**.
 
-سنقوم في هذا الدرس بإستخدام إطار العمل Nextjs وحزمة create-web3-dapp والتي هي إطار عمل قائم على NextJs ومتوافق مع سلاسل الكتل الأكثر استخدامًا بما في ذلك Ethereum والتي تساعد مطوري web3 على بناء تطبيق لامركزي جاهز للإنتاج بسرعة البرق باستخدام قوالب تم بنائها سابقاً: إذهب الى مجلد المشروع وقم بكتابة هذا في terminal
+في هذا الدرس سنقوم بإستخدام إطار العمل Next.js و TailwindCSS من اجل بناء واجهة الموقع.
+
+قم بتشغيل هذا الامر في المجلد **my-app** الذي قمنا بإنشائه سابقاً من اجل إنشاء مشروع nextjs
 
 ```bash
-npx create-web3-dapp@latest
+npx create-next-app@latest .
 ```
 
-اسم المشروع my-app وسنقوم بإعداد المشروع كما موضح في الصورة هنا:
-
-<img src="https://www.web3arabs.com/courses/cw3d-settings.png"/>
-
-> في الخطوة السابعة تم إضافة API Key الذي قمنا بإستخدامه في درس <a href="/courses/d64bee08-2e38-4ad5-958e-5ab6c42ebb41/lessons/f426338c-23db-463f-9f6a-74a4d9c02b91" target="_blank">إنشاء عقد ذكي لمشروع Todo-list</a>
-
-يمكنك تثبيت إطار العمل TailwindCSS من خلال فتح مجلد my-app في terminal <a href="https://tailwindcss.com/docs/guides/nextjs" target="_blank">ومتابعة هذا الشرح المتواجد في وثائق Tailwind</a>
+<img src="https://www.web3arabs.com/courses/dapps/todolist/create-nextjs.png"/>
 
 سنحتاج الان الى تثبيت ethers.js والتي ستساعدنا في التعامل مع العقد الذكي وإرسال المعاملات. قم بكتابة هذا على terminal
 
@@ -29,67 +24,21 @@ npx create-web3-dapp@latest
 npm install ethers@5
 ```
 
-من اجل إضافة شبكة sepolia الى التطبيق سنقوم بالذهاب الى مجلد app ثم الملف layout.jsx وجعله بهذا الشكل
+ستذهب الى مجلد styles وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
 
-```jsx
-"use client";
-import { WagmiConfig, createConfig, sepolia } from "wagmi";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import Navbar from "../components/instructionsComponent/navigation/navbar";
-import Footer from "../components/instructionsComponent/navigation/footer";
-
-const chains = [sepolia]
-
-const config = createConfig(
-	getDefaultConfig({
-		// Required API Keys
-		alchemyId: process.env.ALCHEMY_API_KEY, // or infuraId
-		walletConnectProjectId: "demo",
-
-		// Required
-		appName: "You Create Web3 Dapp",
-
-		// Optional
-		appDescription: "Your App Description",
-		appUrl: "https://family.co", // your app's url
-		appIcon: "https://family.co/logo.png", // your app's logo,no bigger than 1024x1024px (max. 1MB)
-		chains: chains
-	})
-);
-
-export default function RootLayout({ children }) {
-	return (
-		<html lang="en">
-			<WagmiConfig config={config}>
-				<ConnectKitProvider mode="dark">
-					<body>
-						<div
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								minHeight: "105vh",
-							}}
-						>
-							<Navbar />
-							<div style={{ flexGrow: 1 }}>{children}</div>
-							<Footer />
-						</div>
-					</body>
-				</ConnectKitProvider>
-			</WagmiConfig>
-		</html>
-	);
-}
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 ```
 
-الان اذهب الى المجلد app ثم الملف page.jsx وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
+<img src="https://www.web3arabs.com/courses/dapps/todolist/globals-css.png"/>
+
+الان اذهب الى الملف index.js وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
 
 ```jsx
-'use client'
-import "./globals.css";
 import { useState, useEffect } from "react"
 import { ethers } from "ethers"
-import { useAccount } from "wagmi"
 import abi from "../utils/Todolist.json"
 
 export default function Home() {
@@ -97,17 +46,63 @@ export default function Home() {
   const contractAddress = "add_your_smart_contract_address_here"
   const contractABI = abi.abi
 
-  // بمراقبة حالة التطبيق ما إذا كان متصل بالمحفظة او لا useAccount ستقوم
-  const { connector, isConnected } = useAccount()
+  // ستقوم بتخزين عنوان المحفظة التي ستتصل بالتطبيق من اجل مراقبة ما اذا كانت المحفظة متصلة بالتطبيق او نتمكن من استدعاء عنوان المحفظة المتصلة
+  const [currentAccount, setCurrentAccount] = useState("")
   // input ستقوم بتخزين اي تحديث يحصل في
   const [name, setName] = useState("")
   // ستقوم بتخزين المهام التي ستقوم بجلبها من العقد الذكي
   const [tasks, setTasks] = useState([])
 
+  // تعمل هذه الوظيفة على مراقبة اتصال المحفظة بالتطبيق بشكل مستمر
+  const isConnectWallet = async () => {
+    try {
+      // يتم استخدام هذا للوصول إلى كائن اثيريوم والتي من تعد من الكائنات العامة
+      const { ethereum } = window
+
+      // يقوم هذا بإرجاع مجموعة من عناوين شبكة اثيريوم المرتبطة بحساب المستخدم ويمكن استخدام هذا للوصول إلى حسابات المستخدم اثيريوم والتفاعل مع شبكة اثيريوم
+      const accounts = await ethereum.request({method: "eth_requestAccounts"})
+      setCurrentAccount(accounts[0])
+      console.log("accounts: ", accounts)
+
+      /**
+        يتحقق هذا الرمز من وجود أي حسابات متاحة في المحفظة الخاصة باللمستخدم.
+        إذا كان هناك، فإنه يقوم بتعيين الحساب الأول إلى متغير يسمى ويطبع رسالة في وحدة التحكم.
+        إذا لم تكن هناك حسابات متاح، فإنها تطبع رسالة في وحدة التحكم.
+      */
+      if (accounts.length > 0) {
+        const account = accounts[0]
+        console.log("wallet is connected! ", account)
+      } else {
+        console.log("make sure MetaMask is connected")
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // تعمل هذه الوظيفة على اتصال المحفظة بالتطبيق
+  const connectWallet = async () => {
+    try {
+      // يتم استخدام هذا للوصول إلى كائن اثيريوم والتي من تعد من الكائنات العامة
+      const { ethereum } = window
+
+      // يتحقق هذا لمعرفة ما إذا كان موفر شبكة اثيريوم متوفراً. إذا لم يكن متوفراً, فسيخرج رسالة
+      if (!ethereum) {
+        console.log("please install MetaMask")
+      }
+
+      // يقوم هذا بإرجاع مجموعة من عناوين شبكة اثيريوم المرتبطة بحساب المستخدم ويمكن استخدام هذا للوصول إلى حسابات المستخدم اثيريوم والتفاعل مع شبكة اثيريوم
+      const accounts = await ethereum.request({method: "eth_requestAccounts"})
+
+      setCurrentAccount(accounts[0])
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // تعمل هذه الوظيفة بجلب المهام من العقد الذكي
   const getTasks = async () => {
     try {
-
       // يتم استخدام هذا للوصول إلى كائن اثيريوم والتي من تعد من الكائنات العامة
       const { ethereum } = window
 
@@ -241,12 +236,13 @@ export default function Home() {
   // تمثل المصفوفة في نهاية استدعاء الوظيفة ما هي تغييرات الحالة التي ستؤدي إلى هذا التغيير
   // في هذه الحالة كلما تغيرت قيم الوظيفتين سيتم استدعاء هذا التغيير مباشرة
   useEffect(() => {
+    isConnectWallet()
     getTasks()
   }, [])
 
   return (
     <div dir='rtl'>
-      <p className='text-center italic text-3xl text-rose-700 font-bold mt-4'>Todo-list Project</p>
+      <p className='text-center italic text-3xl text-rose-700 font-bold mt-10'>Todo-list Project</p>
       <div className="max-w-md px-4 mx-auto mt-12">
         <div className="flex justify-center">
           <input onChange={event => setName(event.target.value)} type="text" placeholder="ماهي مهمتك القادمة؟" className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-rose-700"/>
@@ -261,8 +257,7 @@ export default function Home() {
         <div>
           <p className='text-center text-xl text-rose-700 font-bold'>المهمات الخاصة بك</p>
           {
-            // null نقوم بالتحقق ما إذا كان التطبيق متصل بالمحفظة ليعرض المهام او لا يعرضها اي
-            isConnected ? tasks.map((task, idx) => (
+            currentAccount ? tasks.map((task, idx) => (
               <div key={idx}>
                 {task.name && (
                   <div className='flex justify-center mt-5'>
@@ -277,7 +272,11 @@ export default function Home() {
                   </div>
                 )}
               </div>
-            )) : null
+            )) : (
+              <div className="flex justify-center">
+                <button onClick={connectWallet} className="px-4 mr-8 mt-5 py-2 text-white bg-rose-600 rounded-lg duration-150 hover:bg-rose-700 active:shadow-lg">اتصل بالمحفظة</button>
+              </div>
+            )
           }
         </div>
       </div>
@@ -285,6 +284,8 @@ export default function Home() {
   )
 }
 ```
+
+<img src="https://www.web3arabs.com/courses/dapps/todolist/indexjs.png"/>
 
 يعمل الكود السابق بإختصار شديد على تشغيل العقد الذكي او المشروع الذي قمنا ببناء عقده (Todo-list) في الواجهة الامامية بحيث يتمكن المستخدم من ربط محفظته واضافة المهام وتحديثها وازالتها.
 
@@ -298,16 +299,110 @@ const contractABI = abi.abi
 
 يمكنك الحصول على ABI الخاص بعقدك الذكي من خلال فتح تطبيق "hardhat" وفتح المجلد "artifacts" ومن ثم فتح المجلد "contracts" و "Todolist.sol" وثم بنسخ الملف "Todolist.json" الى المجلد "utils" الذي قمنا بإنشائه (يمكننا فحص هذا الملف جيداً وكل ماهو مهم بالنسبة لك هو "abi" الخاص بالعقد الذكي الذي ستتعامل معه).
 
-يمكنك تجربة تطبيقك الان
+```js
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Todolist",
+  "sourceName": "contracts/Todolist.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        }
+      ],
+      "name": "addTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "deleteTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTasks",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "status",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Todolist.Task[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "taskIds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateStatus",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
+```
 
-```bash
+<img src="https://www.web3arabs.com/courses/dapps/todolist/abi-contract.png"/>
+
+يمكنك تجربة تطبيقك الان على - <a href="http://localhost:3000" target="_blank">localhost:3000</a>
+
+```jsx
 npm run dev
 ```
 
-إذهب الى <a href="http://localhost:3000" target="_blank">localhost:3000</a> وقم بالإتصال بالتطبيق من خلال محفظتك وقم بإضافة بعض المهام
+إنه يعمل, لقد انتهيت من بناء تطبيق DApps بنجاح 🥳🥳
 
-<img src="https://www.web3arabs.com/courses/todolist-app.png" />
+<img src="https://www.web3arabs.com/courses/dapps/todolist/app.png"/>
 
-إنه يعمل, لقد انتهيت من بناء اول تطبيق DApps بنجاح 🥳🥳
+يمكنك الوصول الى المشروع بشكل مباشر على <a href="https://github.com/Web3Arabs/Todolist-Dapp" target="_blank"> GitHub من هنا</a>
 
-كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://t.me/Web3ArabsDAO" target="_blank">Telegram</a> او <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">Discord</a> وسنكون أكثر من سعداء لمساعدتك!
+كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">Discord</a> وسنكون أكثر من سعداء لمساعدتك!
