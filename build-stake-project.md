@@ -9,23 +9,34 @@
 3. لقد قمت بإعداد محفظتك على Metamask.
 4. لقد قمت بتثبيت Node.js على حهاز الكمبيوتر الخاص بك.
 
-## العقد الذكي
+## إعداد المشروع
 
-سنستخدم احد الادوات التي ستساعدنا في التعامل مع العقود الذكية وهي Hardhat. يعتبر Hardhat بيئة وإطار تطوير شبكة Ethereum مصمم للتعامل بشكل كامل مع لغة Solidity.
+خلال هذا الدرس ستقوم بإنشاء العقد الذكي من اجل تخزين بيانات الفيديوهات التي سيقوم المستخدمين بنشرها ومن ثم ربط العقد الذكي بالموقع الذي سنقوم ببنائه.
 
-سنقوم بإنشاء مشروع بإسم Todolist-Dapp والذي سيحتوي على تطبيق Hardhat وعقدنا الذكي.
+ستقوم بفتح terminal وستدخل هذه الاوامر:
 
 ```bash
-mkdir Staking-Dapp
-cd Staking-Dapp/
+mkdir Staking-Dapp & cd Staking-Dapp
+mkdir contract-tutorial & mkdir my-app
 ```
 
-سنقوم بإعداد npm في التطبيق وتثبيت Hardhat
+<div dir="ltr" className="flex justify-center items-center">
+<img src="https://www.web3arabs.com/courses/dapps/staking/settingup-project.png"/>
+</div>
+
+- في المجلد **contract-tutorial** سنقوم بإعداد ونشر العقد الذكي.
+- في المجلد **my-app** سنقوم ببناء الواجهة الامامية للمشروع وربطها بالعقد الذكي في الدروس القادمة.
+
+## العقد الذكي
+
+سنستخدم احد الادوات التي ستساعدنا في التعامل مع العقود الذكية وهي Hardhat. يعتبر Hardhat هي بيئة وإطار تطوير شبكة Ethereum مصمم للتعامل بشكل كامل مع لغة Solidity.
+
+سنقوم بفتح المجلد **contract-tutorial** على terminal ونقوم بإضافة هذه الاوامر
 
 ```bash
+cd contract-tutorial
 npm init --yes
-npm install --save-dev hardhat
-npm install --save-dev @nomicfoundation/hardhat-toolbox@2
+npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox@2 dotenv
 ```
 
 سنقوم الان بتشغيل تطبيق Hardhat
@@ -34,17 +45,21 @@ npm install --save-dev @nomicfoundation/hardhat-toolbox@2
 npx hardhat
 ```
 
+<img src="https://www.web3arabs.com/courses/dapps/staking/npx-hardhat.png"/>
+
 #### سنلاحظ ان التطبيق يحتوي على 3 مجلدات رئيسية وهي:
 
 1. contracts: الذي سنقوم من خلاله بكتابة العقود الذكية.
 2. scripts: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات.
 3. test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي.
 
+## العقد الذكي
+
 يمكنك الان البدء في إنشاء عقدك الذكي. قم بإنشاء ملف في مجلد contracts بإسم Staking.sol
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 
 contract Staking {
   uint256 private totalStaked;
@@ -99,12 +114,14 @@ contract Staking {
 }
 ```
 
+<img src="https://www.web3arabs.com/courses/dapps/staking/staking-contract.png"/>
+
 > كل ما تحتاجه الان لاكمال عقدك الذكي هو كتابة الوظائف التي تريد تشغليها في داخل العقد الذكي.
 
 يمكنك الان رفع عقدك الذكي بكل سهولة. سنقوم باستخدام شبكة الاختبارات وهي sepolia.
-اذهب الى المجلد scripts وقم بإنشاء ملف بإسم deploy.js
+اذهب الى المجلد scripts وقم بإنشاء ملف بإسم deploy.js (في حال هناك ملف بنفس الاسم قم بإزالة الاكواد التي فيه وإجعله بهذا الشكل):
 
-```js
+```javascript
 const {ethers} = require("hardhat");
 
 async function main() {
@@ -131,35 +148,45 @@ main().catch((error) => {
 });
 ```
 
+<img src="https://www.web3arabs.com/courses/dapps/staking/deploy-contract.png"/>
+
 الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام <a href="https://alchemy.com/" target="_blank">Alchemy</a> كمزود للعقد الخاصة بك بكل سهولة.
 
-قم بإنشاء حساب في منصة <a href="https://alchemy.com/" target="_blank">Alchemy</a> وإذا كان لديك حساب بالفعل قم بتسجيل الدخول وقم بإنشاء تطبيق (CREATE APP) وقم بكتابة اسم لتطبيقك وتحديد شبكة (Sepolia) وقم بالنقر على (CREATE APP) ومن ثم قم بنسخ رابط المفتاح (HTTPS).
+قم بإنشاء حساب في منصة <a href="https://auth.alchemy.com/signup?redirectUrl=https%3A%2F%2Fdashboard.alchemy.com%2Fsignup%2F" target="_blank">Alchemy</a> وإذا كان لديك حساب بالفعل قم <a href="https://auth.alchemy.com/?redirectUrl=https%3A%2F%2Fdashboard.alchemy.com%2Fsignup%2F" target="_blank">بتسجيل الدخول مباشرة</a> ومن ثم الإتجاه نحو لوحة التحكم هذه:
 
-**ملاحظة**: يمكن الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://sepoliafaucet.com/" target="_blank">**Alchemy Faucet**</a>
+<img src="https://www.web3arabs.com/courses/alchemy-dashboard.png"/>
 
-<img src="/courses/alchemy-build.png" alt="Alchemy build"/>
+قم بالنقر على (Create new app) وقم بكتابة اسم لتطبيقك وتحديد شبكة (Sepolia) ومن ثم النقر على (Create app)
 
-يمكنك الحصول على (Private Key) انقر فوق النقاط الثلاث ، وانقر فوق (Account Details) ثم (Export Private Key).
+<img src="https://www.web3arabs.com/courses/alchemy-build.png" alt="Alchemy build"/>
 
-<img src="/courses/alchemy-keys.png" alt="Alchemy keys"/>
+بعد  إنشاء التطبيق سيظهر لك هذه الصفحة قم بالنقر على **VIEW KEY**
 
-قم بإضافة كل ما قمت بنسخه في ملف (.env)
+<img src="https://www.web3arabs.com/courses/alchemy-view-key.png"/>
 
-```bash
+يمكنك نسخ رابط المفتاح (HTTPS) الخاص بك:
+
+<img src="https://www.web3arabs.com/courses/alchemy-keys.png" alt="Alchemy keys"/>
+
+ستقوم الان بنسخ **Private Key** الخاص بمحفظتك المشفرة عن طريق:
+
+1. فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين.
+2. النقر على زر **Account details** ومن ثم النقر على **Show private key**.
+3. قم بكتابة كلمة السر الخاصة بك ومن ثم سيتم عرض لك **private key** المرتبطة بحسابك.
+
+<img src="https://www.web3arabs.com/courses/private-key.png"/>
+
+قم بإضافة كل ما قمت بنسخه في ملف (env.)
+
+```js
 ALCHEMY_HTTPS_URL="add-alchemy-http-url-here"
 
 PRIVATE_KEY="add-private-key-here"
 ```
 
-قم بتثبيت حزمة dotenv حتى تتمكن من إستيراد ملف .env
+قم بفتح ملف hardhat.config.js وقم باستيراد المفاتيح المتواجدة في ملف env. وقم بإختيار الشبكة التي تريد استخدامها لرفع العقد الذكي الخاص بك ولكننا هنا سنستخدم شبكة sepolia فلذلك سنقوم بتحديدها
 
-```bash
-npm install dotenv
-```
-
-قم بفتح ملف hardhat.config.js وقم باستيراد المفاتيح المتواجدة في ملف .env وقم بإختيار الشبكة التي تريد استخدامها لرفع العقد الذكي الخاص بك ولكننا هنا سنستخدم شبكة sepolia فلذلك سنقوم بتحديدها
-
-```js
+```javascript
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config({ path: ".env" });
 
@@ -167,7 +194,7 @@ const ALCHEMY_HTTPS_URL = process.env.ALCHEMY_HTTPS_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 module.exports = {
-  solidity: "0.8.18",
+  solidity: "0.8.19",
   networks: {
     sepolia: {
       url: ALCHEMY_HTTPS_URL,
@@ -177,7 +204,9 @@ module.exports = {
 }
 ```
 
-قم بتجميع العقد الذكي الخاص بك الان. تأكد من انك في مسار تطبيقك (Todolist-Dapp) وقم بتشغيل هذا الامر
+<img src="https://www.web3arabs.com/courses/dapps/staking/hardhat-config.png"/>
+
+قم بتجميع العقد الذكي الخاص بك الان. تأكد من انك في مسار تطبيقك (contract-tutorial) وقم بتشغيل هذا الامر
 
 ```bash
 npx hardhat compile
@@ -189,28 +218,42 @@ npx hardhat compile
 npx hardhat run scripts/deploy.js --network sepolia
 ```
 
-> قم بحفظ عنوان عقدك الذكي حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
+<img src="https://www.web3arabs.com/courses/dapps/staking/contract-deployed.png"/>
+
+قم بحفظ عنوان عقدك الذكي حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
 
 ## ربط المشروع بالواجهة الأمامية بإستخدام Next.js ومكتبة Web3.js
 
-1. إنشاء مشروع Next.js
+في هذا الدرس سنقوم بإستخدام إطار العمل Next.js و TailwindCSS من اجل بناء واجهة الموقع.
+
+1. قم بتشغيل هذا الامر في المجلد **my-app** من اجل إنشاء مشروع nextjs
 
 ```bash
-npx create-next-app my-app
-cd my-app/
+npx create-next-app .
 ```
+
+<img src="https://www.web3arabs.com/courses/dapps/staking/create-nextjs.png"/>
 
 2. تثبيت مكتبة Web3.js
 
 ```bash
-npm install web3
+npm install web3@1.10.0
 ```
 
-3. عليك الان الوصول الى العقد الذكي من خلال إضافة address العقد الذكي و ABI. ستقوم بإنشاء ملف بإسم *info.js* في مشروع next.js
+ستذهب الى مجلد styles وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
 
-بعد إنشاء ملف *info.js* ستقوم بنسخ هذا وإضافة ما يتعلق بعقد الذكي مثل address و ABI
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
 
-```js
+<img src="https://www.web3arabs.com/courses/dapps/staking/globals-css.png"/>
+
+3. عليك الان الوصول الى العقد الذكي من خلال إضافة address العقد الذكي و ABI. ستقوم بإنشاء ملف بإسم **info.js** في مشروع next.js
+بعد إنشاء ملف **info.js** ستقوم بنسخ هذا وإضافة ما يتعلق بعقد الذكي مثل address و ABI
+
+```javascript
 // قم بإضافة عنوان عقدك الذكي
 export const contractAddress = "0x123456789abcdef0123456xxxxxxxxxxxxxxx"
 
@@ -317,7 +360,9 @@ export const contractABI = [
 ]
 ```
 
-4. الان اذهب الى الملف *index.js* وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
+<img src="https://www.web3arabs.com/courses/dapps/staking/infojs.png"/>
+
+4. الان اذهب الى الملف **index.js** في المجلد pages وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
 
 ```jsx
 import { useEffect } from 'react';
@@ -364,22 +409,37 @@ export default function Home() {
   }, [])
 
   return (
-    <div>
+    <div className='m-2'>
       <h1>Deposit 0.005 ETH</h1>
-      <button onClick={deposit}>Deposit</button>
+      <button
+        className='bg-black text-white rounded-md p-1 mt-2'
+        onClick={deposit}
+      >Deposit</button>
 
-      <h1>Withdraw all my Deposit</h1>
-      <button onClick={withdraw}>Withdraw</button>
+      <h1 className='mt-2'>Withdraw all my Deposit</h1>
+      <button
+        className='bg-black text-white rounded-md p-1 mt-2'
+        onClick={withdraw}
+      >Withdraw</button>
     </div>
   )
 }
 ```
 
+<img src="https://www.web3arabs.com/courses/dapps/staking/indexjs.png"/>
+
 يمكنك تجربة تطبيقك الان
+
 ```bash
 npm run dev
 ```
 
 إنه يعمل, لقد انتهيت من بناء تطبيق DApps بنجاح 🥳🥳
 
-كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">Discord</a> وسنكون أكثر من سعداء لمساعدتك!
+<div className="flex justify-center items-center">
+<img src="https://www.web3arabs.com/courses/dapps/staking/app.png"/>
+</div>
+
+يمكنك الوصول الى المشروع بشكل مباشر على <a href="https://github.com/Web3Arabs/Staking-Dapp" target="_blank"> GitHub من هنا</a>
+
+كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://t.me/Web3ArabsDAO" target="_blank">Telegram</a> او <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">Discord</a> وسنكون أكثر من سعداء لمساعدتك!
