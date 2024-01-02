@@ -7,8 +7,8 @@
 ## المتطلبات الاساسية للبدء في هذا الدرس:
 
 1. يمكنك التعامل مع لغة البرمجة JavaScript. 
-2. انتهيت من قرأة درس اساسيات لغة Solidity. 
-3. لقد قمت بإعداد محفظتك على Metamask. 
+2. لقد قمت بإعداد محفظتك على Metamask.
+3. انتهيت من قرأة درس اساسيات لغة Solidity.
 4. لقد قمت بتثبيت Node.js على حهاز الكمبيوتر الخاص بك.
 
 ## إعداد المشروع
@@ -22,9 +22,7 @@ mkdir web3-youtube & cd web3-youtube
 mkdir contract & mkdir frontend
 ```
 
-<div dir="ltr" className="flex justify-center items-center">
 <img src="https://www.web3arabs.com/courses/dapps/livepeer/settingup-project.png"/>
-</div>
 
 - في المجلد **contract** سنقوم بإعداد ونشر العقد الذكي. 
 - في المجلد **frontend** سنقوم ببناء الواجهة الامامية للمشروع وربطها بالعقد الذكي.
@@ -50,6 +48,7 @@ npx hardhat
 يمكنك الان فتح مشروعك على محرر الاكواد الخاص بك.
 
 #### سنلاحظ ان التطبيق يحتوي على 3 مجلدات رئيسية وهي:
+
 1. contracts: الذي سنقوم من خلاله بكتابة العقود الذكية. 
 2. scripts: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات. 
 3. test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي.
@@ -168,23 +167,37 @@ main()
 
 <img src="https://www.web3arabs.com/courses/dapps/livepeer/deploy-contarct.png"/>
 
-الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام <a href="https://alchemy.com/" target="_blank">Alchemy</a> كمزود للعقد الخاصة بك بكل سهولة.
+الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**QuickNode**</a> كمزود للعقد الخاصة بك بكل سهولة.
 
-قم بإنشاء حساب في منصة <a href="https://auth.alchemy.com/signup?redirectUrl=https%3A%2F%2Fdashboard.alchemy.com%2Fsignup%2F" target="_blank">Alchemy</a> وإذا كان لديك حساب بالفعل قم <a href="https://auth.alchemy.com/?redirectUrl=https%3A%2F%2Fdashboard.alchemy.com%2Fsignup%2F" target="_blank">بتسجيل الدخول مباشرة</a> ومن ثم الإتجاه نحو لوحة التحكم هذه:
+قم <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**بإنشاء حساب على QuickNode**</a> من خلال النقر على **Create account** وإذا كان لديك حساب بالفعل قم بتسجيل الدخول مباشرة  من خلال النقر على **Sign in**.
 
-<img src="https://www.web3arabs.com/courses/alchemy-dashboard.png"/>
+<img src="https://www.web3arabs.com/courses/quicknode-home.png"/>
 
-قم بالنقر على (Create new app) وقم بكتابة اسم لتطبيقك وتحديد شبكة (Sepolia) ومن ثم النقر على (Create app)
+بمجرد تسجيل الدخول سيتقم نقلك إلى لوحة التحكم هذه:
 
-<img src="https://www.web3arabs.com/courses/alchemy-build.png" alt="Alchemy build"/>
+<img src="https://www.web3arabs.com/courses/quicknode-dashboard.png"/>
 
-بعد  إنشاء التطبيق سيظهر لك هذه الصفحة قم بالنقر على **VIEW KEY**
+سنقوم بالذهاب الى قسم **Endpoints** من خلال القسم الايسر ومن ثم النقر على الزر **Create Endpoint** من اجل إنشاء مزود عُقدة
 
-<img src="https://www.web3arabs.com/courses/alchemy-view-key.png"/>
+<img src="https://www.web3arabs.com/courses/quicknode-endpoints.png"/>
 
-يمكنك نسخ رابط المفتاح (HTTPS) الخاص بك:
+**سنقوم بإنشاء **Endpoints** بهذه الطريقة:**
 
-<img src="https://www.web3arabs.com/courses/alchemy-keys.png" alt="Alchemy keys"/>
+1- سنقوم بإستخدام سلسلة **Ethereum** فلذلك سنقوم بتحديدها هكذا والنقر على الزر **Continue**:
+
+<img src="https://www.web3arabs.com/courses/quicknode-select-chain.png"/>
+
+2- بما ان الغرض من الدرس هو التعلم فلذلك سنقوم بتحديد شبكة الإختبار **Sepolia** والنقر على الزر **Continue**:
+
+<img src="https://www.web3arabs.com/courses/quicknode-select-network.png"/>
+
+3- سنقوم بالنقر على الزر **Create Endpoint** لإنشاء المزود:
+
+<img src="https://www.web3arabs.com/courses/quicknode-create.png"/>
+
+4- أخيراً - ستقوم بنسخ **HTTP Provider** لأننا سنحتاجه لاحقاً من اجل نشر عقدنا الذكي على شبكة **Sepolia**
+
+<img src="https://www.web3arabs.com/courses/quicknode-keys.png"/>
 
 ستقوم الان بنسخ **Private Key** الخاص بمحفظتك المشفرة عن طريق:
 
@@ -197,7 +210,7 @@ main()
 قم بإضافة كل ما قمت بنسخه في ملف (env.)
 
 ```js
-ALCHEMY_HTTPS_URL="add-alchemy-http-url-here"
+QUICKNODE_HTTP_PROVIDER="add-quicknode-http-url-here"
 
 PRIVATE_KEY="add-private-key-here"
 ```
@@ -208,21 +221,21 @@ PRIVATE_KEY="add-private-key-here"
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config({ path: ".env" });
 
-const ALCHEMY_HTTPS_URL = process.env.ALCHEMY_HTTPS_URL;
+const QUICKNODE_HTTP_PROVIDER = process.env.QUICKNODE_HTTP_PROVIDER;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 module.exports = {
   solidity: "0.8.19",
   networks: {
     sepolia: {
-      url: ALCHEMY_HTTPS_URL,
+      url: QUICKNODE_HTTP_PROVIDER,
       accounts: [PRIVATE_KEY],
     },
   },
 }
 ```
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/config-deploy.png"/>
+**ملاحظة**: يمكن الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://www.infura.io/faucet/sepolia" target="_blank">**Infura Faucet**</a> - ستقوم بإنشاء حساب على **Infura** ستقوم بوضع عنوان **address** الخاص بك وستحصل على بعض من العملات.
 
 حان وقت نشر عقدك الذكي :) قم بكتابة هذا الامر
 
@@ -232,7 +245,6 @@ npx hardhat run scripts/deploy.js --network sepolia
 
 <div className="flex justify-center items-center">
 <img src="https://www.web3arabs.com/courses/dapps/livepeer/deployed-contract.png"/>
-</div>
 
 قم بحفظ عنوان عقدك الذكي حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
 
@@ -276,75 +288,75 @@ npm run dev
 import { useEffect, useState } from "react"
 
 export default function Header() {
-    const [currentAccount, setCurrentAccount] = useState("")
+  const [currentAccount, setCurrentAccount] = useState("")
 
-    // تعمل الدالة على ربط الموقع بالمحفظة
-    const connectWallet = async () => {
-        try {
-            const { ethereum } = window
+  // تعمل الدالة على ربط الموقع بالمحفظة
+  const connectWallet = async () => {
+    try {
+      const { ethereum } = window
 
-            // التحقق ما إذا كان المستخدم قام بتثبيت المحفظة
-            if (!ethereum) {
-                // إذا لم يقم بذلك فسيتم طباعة هذا الامر امامه
-                alert("Please install MetaMask")
-                return;
-            }
+      // التحقق ما إذا كان المستخدم قام بتثبيت المحفظة
+      if (!ethereum) {
+        // إذا لم يقم بذلك فسيتم طباعة هذا الامر امامه
+        alert("Please install MetaMask")
+        return;
+      }
 
-            // في حال المستخدم قد قام بتثبيت المحفظة سيقوم بطلب إتصال المحفظة
-            const accounts = await ethereum.request({
-                method: "eth_requestAccounts",
-            })
+      // في حال المستخدم قد قام بتثبيت المحفظة سيقوم بطلب إتصال المحفظة
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      })
 
-            // المستخدم في المتصفح address تخزين
-            localStorage.setItem("walletAddress", accounts[0])
-            setCurrentAccount(accounts[0])
-        } catch (error) {
-            console.error(error)
-        }
-    };
+      // المستخدم في المتصفح address تخزين
+      localStorage.setItem("walletAddress", accounts[0])
+      setCurrentAccount(accounts[0])
+    } catch (error) {
+      console.error(error)
+    }
+  };
 
-    useEffect(() => {
-        connectWallet()
-    }, [])
+  useEffect(() => {
+    connectWallet()
+  }, [])
 
-    return (
-        <>
-            <nav className="relative z-20 bg-white w-full md:static md:text-sm md:border-none -mt-6">
-                <div className="items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:flex md:px-8">
-                    <div className="flex items-center justify-between py-3 md:py-5 md:block">
-                        <a href="/">
-                            <img
-                                src="https://img.freepik.com/premium-vector/red-youtube-logo-social-media-logo_197792-1803.jpg?w=2000"
-                                width={80}
-                                height={40}
-                                className="-mt-1"
-                                alt="YouTube logo"
-                            />
-                        </a>
-                    </div>
-                    <div className="nav-menu flex-1 pb-3 mt-8 md:block md:pb-0 md:mt-0">
-                        <ul className="items-center space-y-6 md:flex md:space-x-6 md:space-x-reverse md:space-y-0">
-                            <div className='flex-1 items-center justify-end gap-x-6 space-y-3 md:flex md:space-y-0'>
-                                <li>
-                                    <a href="/upload" className="block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
-                                        نشر فيديو
-                                    </a>
-                                </li>
-                                
-                                {!currentAccount ? (
-                                    <li>
-                                        <button onClick={() => connectWallet()} className="block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
-                                            ربط المحفظة
-                                        </button>
-                                    </li>
-                                ) : null}
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </>
-    )
+  return (
+    <>
+      <nav className="relative z-20 bg-white w-full md:static md:text-sm md:border-none -mt-6">
+        <div className="items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:flex md:px-8">
+          <div className="flex items-center justify-between py-3 md:py-5 md:block">
+            <a href="/">
+              <img
+                src="https://img.freepik.com/premium-vector/red-youtube-logo-social-media-logo_197792-1803.jpg?w=2000"
+                width={80}
+                height={40}
+                className="-mt-1"
+                alt="YouTube logo"
+              />
+            </a>
+          </div>
+          <div className="nav-menu flex-1 pb-3 mt-8 md:block md:pb-0 md:mt-0">
+            <ul className="items-center space-y-6 md:flex md:space-x-6 md:space-x-reverse md:space-y-0">
+              <div className='flex-1 items-center justify-end gap-x-6 space-y-3 md:flex md:space-y-0'>
+                <li>
+                  <a href="/upload" className="block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
+                    نشر فيديو
+                  </a>
+                </li>
+                  
+                {!currentAccount ? (
+                  <li>
+                    <button onClick={() => connectWallet()} className="block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
+                      ربط المحفظة
+                    </button>
+                  </li>
+                ) : null}
+              </div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </>
+  )
 }
 ```
 
@@ -528,9 +540,7 @@ export default function Upload() {
                 رجوع
               </a>
               {renderButton()}
-            </div>
-          </div>
-          <div className="flex flex-col m-10     mt-5  lg:flex-row">
+                                <div className="flex flex-col m-10     mt-5  lg:flex-row">
             <div className="flex lg:w-3/4 flex-col ">
               <label className="text-black text-sm">عنوان الفيديو</label>
               <input
@@ -564,8 +574,7 @@ export default function Upload() {
                     placeholder="الإمارات - دبي"
                     className="w-[90%] text-black placeholder:text-gray-500 rounded-md mt-2 h-12 p-2 border border-[#444752] focus:outline-none"
                   />
-                </div>
-                <div className="flex flex-col w-2/5">
+                                <div className="flex flex-col w-2/5">
                   <label className="text-black text-sm">الفئة</label>
                   <select
                     value={category}
@@ -582,10 +591,7 @@ export default function Upload() {
                     <option>رحلة/سفر</option>
                     <option>آخر</option>
                   </select>
-                </div>
-              </div>
-            </div>
-
+                                          
             <div
               onClick={() => {
                 videoRef.current.click();
@@ -605,9 +611,7 @@ export default function Upload() {
               ) : (
                 <p className="text-[#848891]">رفع فيديو</p>
               )}
-            </div>
-          </div>
-          <input
+                                <input
             type="file"
             className="hidden"
             ref={videoRef}
@@ -617,10 +621,7 @@ export default function Upload() {
               console.log(e.target.files[0]);
             }}
           />
-        </div>
-      </div>
-    </div>
-  );
+                    );
 }
 ```
 
@@ -715,13 +716,8 @@ export default function home() {
                   ...{video?.author?.slice(0, 9)}{" "}
                   <BiCheck size="20px" color="green" className="ml-1" />
                 </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+                                            ))}
+            )
 }
 ```
 
@@ -761,10 +757,7 @@ export default function Player({ video }) {
             {video.category} •{" "}
             {new Date(video.createdAt.toString() * 1000).toLocaleString("ar-IN")}
           </p>
-        </div>
-      </div>
-    </div>
-  );
+                    );
 }
 ```
 
@@ -850,8 +843,7 @@ export default function VideoPage() {
             <div className="flex flex-col m-10 justify-between lg:flex-row">
               <div className="lg:w-4/6 w-6/6">
                 <Player video={video} />
-              </div>
-              <div className="w-2/6">
+                            <div className="w-2/6">
                 <h4 className="text-md font-bold text-black mr-5 mb-3">
                   فيديوهات مقترحة
                 </h4>
@@ -876,17 +868,9 @@ export default function VideoPage() {
                           ...{video?.author?.slice(0, 9)}{" "}
                           <BiCheck size="20px" color="green" className="ml-1" />
                         </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
+                                                                            ))}
+                                    )}
+                    )
 }
 ```
 
