@@ -182,6 +182,8 @@ main().catch((error) => {
 
 <img src="https://www.web3arabs.com/courses/quicknode-keys.png"/>
 
+**ملاحظة**: في حال لم تتمكن من إستخدام <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**QuickNode**</a> يمكنك تجربة مُزود آخر مثل <a href="https://www.infura.io/" target="_blank">**Infura**</a> - كُل ما يهم هو الحصول على **HTTP Provider**.
+
 ستقوم الان بنسخ **Private Key** الخاص بمحفظتك المشفرة عن طريق:
 
 1. فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين.
@@ -224,7 +226,9 @@ module.exports = {
 npx hardhat compile
 ```
 
-**ملاحظة**: يمكن الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://www.infura.io/faucet/sepolia" target="_blank">**Infura Faucet**</a> - ستقوم بإنشاء حساب على **Infura** ستقوم بوضع عنوان **address** الخاص بك وستحصل على بعض من العملات.
+**ملاحظة**: يمكنك الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://www.web3arabs.com/faucets/sepolia" target="_blank">**صنبور Web3Arabs هنا**</a> - قم بتوصيل محفظتك بالصنبور وإنقر على الزر **إرسال**.
+
+<img src="https://www.web3arabs.com/courses/faucet-sepolia.png"/>
 
 حان وقت نشر عقدك الذكي :) قم بكتابة هذا الامر
 
