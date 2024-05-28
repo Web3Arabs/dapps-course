@@ -6,10 +6,8 @@
 
 ## المتطلبات الاساسية للبدء في هذا الدرس:
 
-1. يمكنك التعامل مع لغة البرمجة JavaScript. 
-2. لقد قمت بإعداد محفظتك على Metamask.
-3. انتهيت من قرأة درس اساسيات لغة Solidity.
-4. لقد قمت بتثبيت Node.js على حهاز الكمبيوتر الخاص بك.
+1. لقد قمت بإعداد محفظتك على Metamask.
+2. انتهيت من قرأة درس اساسيات لغة Solidity.
 
 ## إعداد المشروع
 
@@ -29,35 +27,43 @@ mkdir contract & mkdir frontend
 
 ## العقد الذكي (Smart Contract)
 
-ستقوم بإضافة هذه الاوامر في terminal لإعداد المشروع:
+سنستخدم أحد أقوى وأسرع الادوات التي ستساعدنا في التعامل مع العقود الذكية وهي Foundry. يعتبر Foundry هي بيئة وإطار تطوير شبكة Ethereum مصمم للتعامل بشكل كامل مع لغة Solidity.
+
+يمكنك إعداد وتثبيت أداة Foundry في جهازك بواسطة أحد المقالات لدينا من هنا.
+
+سنقوم بفتح المجلد contract على terminal ونقوم بإنشاء مشروع Foundry بواسطة هذا الأمر:
+
 
 ```bash
 cd contract
-npm init --yes
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox@2 dotenv
+forge init
+
 ```
 
-سنقوم الان بتشغيل تطبيق Hardhat
+سنقوم بحذف الملفات التلقائية بالمشروع التي لا نحتاجها عن طريق تشغيل هذا الأمر:
+
 
 ```bash
-npx hardhat
+rm src/Counter.sol script/Counter.s.sol test/Counter.t.sol
 ```
 
 <img src="https://www.web3arabs.com/courses/dapps/livepeer/npx-hardhat.png"/>
 
 يمكنك الان فتح مشروعك على محرر الاكواد الخاص بك.
 
-#### سنلاحظ ان التطبيق يحتوي على 3 مجلدات رئيسية وهي:
+#### سنلاحظ ان التطبيق يحتوي على 4 مجلدات رئيسية وهي:
 
-1. contracts: الذي سنقوم من خلاله بكتابة العقود الذكية. 
-2. scripts: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات. 
-3. test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي.
 
-يمكنك الان البدء في إنشاء عقدك الذكي. قم بإنشاء ملف في مجلد contracts بإسم YouTube.sol
+1.lib: يحتوي على المُشغل الاساسي للمشروع بالكامل ولن نقوم بالتعديل عليه على الإطلاق.
+2.script: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات.
+3.src: الذي سنقوم من خلاله بكتابة العقود الذكية.
+4.test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي
+يمكنك الان البدء في إنشاء عقدك الذكي. قم بإنشاء ملف بإسم YouTube.sol في مجلد src:
+
 
 ```solidity
-//SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.19;
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
 
 contract YouTube {
     // يعمل المتغير على تخزين عدد الفيديوهات
@@ -137,158 +143,106 @@ contract YouTube {
         );
     }
 }
-```
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/yt-contract.png"/>
+```
 
 يمكنك الان رفع عقدك الذكي بكل سهولة. سنقوم باستخدام شبكة الاختبارات وهي sepolia.
-اذهب الى المجلد scripts وقم بإنشاء ملف بإسم deploy.js (في حال هناك ملف بنفس الاسم قم بإزالة الاكواد التي فيه وإجعله بهذا الشكل):
 
-```js
-const hre = require("hardhat");
+الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام QuickNode كمزود للعقد الخاصة بك بكل سهولة.
 
-async function main() {
-  // نقوم بإستدعاء العقد الذكي من اجل نشره
-  const YouTube = await hre.ethers.getContractFactory("YouTube");
-  const youtube = await YouTube.deploy();
+قم بإنشاء حساب على QuickNode من خلال النقر على Create account وإذا كان لديك حساب بالفعل قم بتسجيل الدخول مباشرة من خلال النقر على Sign in.
 
-  await youtube.deployed();
 
-  console.log("YouTube deployed to:", youtube.address);
-}
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/deploy-contarct.png"/>
-
-الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**QuickNode**</a> كمزود للعقد الخاصة بك بكل سهولة.
-
-قم <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**بإنشاء حساب على QuickNode**</a> من خلال النقر على **Create account** وإذا كان لديك حساب بالفعل قم بتسجيل الدخول مباشرة  من خلال النقر على **Sign in**.
-
-<img src="https://www.web3arabs.com/courses/quicknode-home.png"/>
+<img src="/courses/quicknode-home.png">
 
 بمجرد تسجيل الدخول سيتقم نقلك إلى لوحة التحكم هذه:
+<img src="/courses/quicknode-dashboard.png">
 
-<img src="https://www.web3arabs.com/courses/quicknode-dashboard.png"/>
+سنقوم بالذهاب الى قسم Endpoints من خلال القسم الايسر ومن ثم النقر على الزر Create Endpoint من اجل إنشاء مزود عُقدة
 
-سنقوم بالذهاب الى قسم **Endpoints** من خلال القسم الايسر ومن ثم النقر على الزر **Create Endpoint** من اجل إنشاء مزود عُقدة
+<img src="/courses/quicknode-endpoints.png">
 
-<img src="https://www.web3arabs.com/courses/quicknode-endpoints.png"/>
+## سنقوم بإنشاء Endpoints بهذه الطريقة:
 
-**سنقوم بإنشاء **Endpoints** بهذه الطريقة:**
+1- سنقوم بإستخدام سلسلة Ethereum فلذلك سنقوم بتحديدها هكذا والنقر على الزر Continue:
 
-1- سنقوم بإستخدام سلسلة **Ethereum** فلذلك سنقوم بتحديدها هكذا والنقر على الزر **Continue**:
+<img src="/courses/quicknode-select-chain.png">
+2- بما ان الغرض من الدرس هو التعلم فلذلك سنقوم بتحديد شبكة الإختبار Sepolia والنقر على الزر Continue:
 
-<img src="https://www.web3arabs.com/courses/quicknode-select-chain.png"/>
+<img src="/courses/quicknode-select-network.png">
+3- سنقوم بالنقر على الزر Create Endpoint لإنشاء المزود:
+<img src="/courses/quicknode-create.png">
 
-2- بما ان الغرض من الدرس هو التعلم فلذلك سنقوم بتحديد شبكة الإختبار **Sepolia** والنقر على الزر **Continue**:
+4- أخيراً - ستقوم بنسخ HTTP Provider لأننا سنحتاجه لاحقاً من اجل نشر عقدنا الذكي على شبكة Sepolia
+<img src="/courses/quicknode-keys.png">
 
-<img src="https://www.web3arabs.com/courses/quicknode-select-network.png"/>
+قم بإضافة HTTP Provider في ملف (.env)
 
-3- سنقوم بالنقر على الزر **Create Endpoint** لإنشاء المزود:
+``` QUICKNODE_HTTP_PROVIDER="add-quicknode-http-url-here" ```
 
-<img src="https://www.web3arabs.com/courses/quicknode-create.png"/>
+ستقوم الان بنسخ Private Key الخاص بمحفظتك المشفرة عن طريق:
 
-4- أخيراً - ستقوم بنسخ **HTTP Provider** لأننا سنحتاجه لاحقاً من اجل نشر عقدنا الذكي على شبكة **Sepolia**
+1.فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين.
+2.النقر على زر Account details ومن ثم النقر على Show private key.
+3.قم بكتابة كلمة السر الخاصة بك ومن ثم سيتم عرض لك private key المرتبطة بحسابك.
 
-<img src="https://www.web3arabs.com/courses/quicknode-keys.png"/>
+<img src="/courses/private-key.png">
 
-**ملاحظة**: في حال لم تتمكن من إستخدام <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**QuickNode**</a> يمكنك تجربة مُزود آخر مثل <a href="https://www.infura.io/" target="_blank">**Infura**</a> - كُل ما يهم هو الحصول على **HTTP Provider**.
+في حال لم تقوم بإضافة المحفظة من قبل، ستقوم بإضافة معلومات محفظتك في جهازك عن طريق المفتاح الخاص (Private Key) الذي قمت بنسخه عن طريق تشغيل هذا الأمر:
 
-ستقوم الان بنسخ **Private Key** الخاص بمحفظتك المشفرة عن طريق:
+ستقوم أولاً بإضافة العنوان الخاص ومن ثم كلمة سر خاصه بك وتذكرها جيداً، لأن سيتم مطالبتك بها في كل مره تريد استخدام محفظتك في نشر عقد ذكي.
 
-1. فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين. 
-2. النقر على زر **Account details** ومن ثم النقر على **Show private key**. 
-3. قم بكتابة كلمة السر الخاصة بك ومن ثم سيتم عرض لك **private key** المرتبطة بحسابك.
+``` cast wallet import deployer --interactive ```
+<img src="/courses/dapps/todolist/add-deployer.png">
 
-<img src="https://www.web3arabs.com/courses/private-key.png"/>
 
-قم بإضافة كل ما قمت بنسخه في ملف (env.)
+ستقوم بالتأكيد عن طريق تشغيل هذا الأمر:
 
-```js
-QUICKNODE_HTTP_PROVIDER="add-quicknode-http-url-here"
+``` cast wallet list ```
 
-PRIVATE_KEY="add-private-key-here"
-```
+قم بتجميع العقد الذكي الخاص بك الان. تأكد من انك في مسار تطبيقك (contract) وقم بتشغيل هذا الامر:
 
-قم بفتح ملف hardhat.config.js وقم باستيراد المفاتيح المتواجدة في ملف env. وقم بإختيار الشبكة التي تريد استخدامها لرفع العقد الذكي الخاص بك ولكننا هنا سنستخدم شبكة sepolia فلذلك سنقوم بتحديدها
+``` forge build ```
 
-```javascript
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config({ path: ".env" });
+**ملاحظة**: يمكنك الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة Sepolia من صنبور Web3Arabs هنا - قم بتوصيل محفظتك بالصنبور وإنقر على الزر إرسال.
 
-const QUICKNODE_HTTP_PROVIDER = process.env.QUICKNODE_HTTP_PROVIDER;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+<img src="/courses/faucet-sepolia.png">
 
-module.exports = {
-  solidity: "0.8.19",
-  networks: {
-    sepolia: {
-      url: QUICKNODE_HTTP_PROVIDER,
-      accounts: [PRIVATE_KEY],
-    },
-  },
-}
-```
+الان ستقوم بتفعيل المتغير المتواجد في ملف .env في terminal من أجل إستخدامها في الخطوة القادمة:
 
-**ملاحظة**: يمكنك الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://www.web3arabs.com/faucets/sepolia" target="_blank">**صنبور Web3Arabs هنا**</a> - قم بتوصيل محفظتك بالصنبور وإنقر على الزر **إرسال**.
-
-<img src="https://www.web3arabs.com/courses/faucet-sepolia.png"/>
+``` source .env ```
 
 حان وقت نشر عقدك الذكي :) قم بكتابة هذا الامر
 
-```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
+``` forge create ./src/YouTube.sol:YouTube --rpc-url $QUICKNODE_HTTP_PROVIDER --account deployer ```
 
-<div className="flex justify-center items-center">
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/deployed-contract.png"/>
-
-قم بحفظ عنوان عقدك الذكي حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
+قم بنسخ عنوان عقدك الذكي من أجل إجتياز الاختبار في الاسفل وحفظه حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
 
 ## الواجهة الامامية (Front-end)
-
 في هذا الدرس سنقوم بإستخدام إطار العمل Next.js و TailwindCSS من اجل بناء واجهة الموقع.
 
 قم بتشغيل هذا الامر في المجلد frontend من اجل إنشاء مشروع nextjs
 
-```bash
-npx create-next-app .
-```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/create-next-app.png"/>
+``` npx create-next-app .```
+<img src="/courses/dapps/livepeer/create-next-app.png">
 
 قم بتشغيل هذا الامر لتثبيت المكاتب التي سنحتاجها في المشروع
 
-```bash
-npm install react-icons plyr-react moment ethers@5 @livepeer/react
+``` npm install react-icons plyr-react moment ethers@5 @livepeer/react ```
+ستذهب الى مجلد styles وستقوم بفتح الملف globals.css وستبقي هذه الاوامر في الملف
+
 ```
-
-ستذهب الى مجلد styles وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
-
-```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/globals-css.png"/>
-
+<img src="/courses/dapps/livepeer/globals-css.png">
 يمكنك تشغيل مشروعك الان ورؤية النتائج من خلال إدخال هذا الامر
 
-```bash
-npm run dev
-```
-
+``` npm run dev ```
 ستقوم الان بإنشاء مجلد components ومن ثم إنشاء ملف Header.js وإضافة هذا الكود:
-
-```jsx
+```
 import { useEffect, useState } from "react"
 
 export default function Header() {
@@ -363,32 +317,27 @@ export default function Header() {
   )
 }
 ```
+<img src="/courses/dapps/livepeer/header-front.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/header-front.png"/>
-
-### إعداد حساب Livepeer في المشروع
-
+## إعداد حساب Livepeer في المشروع
 Livepeer عبارة عن شبكة معالجة فيديو لامركزية ومنصة تطوير حيث يمكنك استخدامها لإنشاء تطبيقات الفيديو. لكونه سريع جدًا وسهل التكامل ورخيص. في هذا البرنامج التعليمي، سنستخدم Livepeer لتحميل مقاطع الفيديو وتقديمها للمستخدمين.
 
-انتقل إلى <a href="https://livepeer.studio/register" target="_blank">**https://livepeer.studio/register**</a> وقم بإنشاء حساب جديد على **Livepeer Studio**.
+انتقل إلى https://livepeer.studio/register وقم بإنشاء حساب جديد على Livepeer Studio.
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/livepeer-register.png"/>
+<img src="/courses/dapps/livepeer/livepeer-register.png">
 
-بمجرد إنشاء حساب، في لوحة التحكم، انقر فوق **Developers** في الشريط الجانبي.
+بمجرد إنشاء حساب، في لوحة التحكم، انقر فوق Developers في الشريط الجانبي.
+<img src="/courses/dapps/livepeer/livepeer-dashboard.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/livepeer-dashboard.png"/>
+بعد ذلك، انقر فوق "Create an API Key"، وقم بإعطاء اسم لمفتاحك ثم انسخه حيث سنحتاج إليه لاحقًا.
+<img src="/courses/dapps/livepeer/livepeer-devs.png">
+<img src="/courses/dapps/livepeer/livepeer-create-api.png">
 
-بعد ذلك، انقر فوق "**Create an API Key**"، وقم بإعطاء اسم لمفتاحك ثم انسخه حيث سنحتاج إليه لاحقًا.
+مكتبة Livepeer.js عبارة عن JavaScript SDK مع خطافات جاهزة للاستخدام تتيح لنا تحميل الفيديو بسرعة وتقديم مقاطع الفيديو والاتصال بـ Livepeer Studio. إذهب إلى الملف app.js_ في المجلد pages وقم بإعداد بهذا الشكل:
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/livepeer-devs.png"/>
+ستقوم بإضافة API Key الذي قمنا بإنشائه على Livepeer Studio بدلاً من "add-api-key-here" في الكود:
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/livepeer-create-api.png"/>
-
-مكتبة **Livepeer.js** عبارة عن JavaScript SDK مع خطافات جاهزة للاستخدام تتيح لنا تحميل الفيديو بسرعة وتقديم مقاطع الفيديو والاتصال بـ Livepeer Studio. إذهب إلى الملف **app.js_** في المجلد pages وقم بإعداد بهذا الشكل:
-
-ستقوم بإضافة **API Key** الذي قمنا بإنشائه على Livepeer Studio بدلاً من **"add-api-key-here"** في الكود:
-
-```jsx
+```
 import '@/styles/globals.css'
 import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react'
 
@@ -405,17 +354,14 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/appjs.png"/>
+## نشر الفيديوهات
+سنقوم بإعداد صفحة نشر الفيديوهات وربطها بالعقد الذكي ومكتبة Livepeer. ستذهب الى المجلد pages وستقوم بإنشاء ملف بإسم upload.js وستضع هذا:
 
-### نشر الفيديوهات
-
-سنقوم بإعداد صفحة نشر الفيديوهات وربطها بالعقد الذكي ومكتبة Livepeer. ستذهب الى المجلد pages وستقوم بإنشاء ملف بإسم **upload.js** وستضع هذا:
-
-```jsx
+```
 import React, { useState, useRef } from "react";
 import { BiCloud } from "react-icons/bi";
 import { useCreateAsset } from "@livepeer/react";
-import ContractAbi from "../../contract/artifacts/contracts/Youtube.sol/YouTube.json"
+import ContractAbi from "../../contract/out/Youtube.sol/YouTube.json"
 import { ethers } from "ethers"
 import Header from "../components/Header"
 
@@ -544,7 +490,9 @@ export default function Upload() {
                 رجوع
               </a>
               {renderButton()}
-                                <div className="flex flex-col m-10     mt-5  lg:flex-row">
+            </div>
+          </div>
+          <div className="flex flex-col m-10     mt-5  lg:flex-row">
             <div className="flex lg:w-3/4 flex-col ">
               <label className="text-black text-sm">عنوان الفيديو</label>
               <input
@@ -578,7 +526,8 @@ export default function Upload() {
                     placeholder="الإمارات - دبي"
                     className="w-[90%] text-black placeholder:text-gray-500 rounded-md mt-2 h-12 p-2 border border-[#444752] focus:outline-none"
                   />
-                                <div className="flex flex-col w-2/5">
+                </div>
+                <div className="flex flex-col w-2/5">
                   <label className="text-black text-sm">الفئة</label>
                   <select
                     value={category}
@@ -595,7 +544,10 @@ export default function Upload() {
                     <option>رحلة/سفر</option>
                     <option>آخر</option>
                   </select>
-                                          
+                </div>
+              </div>
+            </div>
+
             <div
               onClick={() => {
                 videoRef.current.click();
@@ -615,7 +567,9 @@ export default function Upload() {
               ) : (
                 <p className="text-[#848891]">رفع فيديو</p>
               )}
-                                <input
+            </div>
+          </div>
+          <input
             type="file"
             className="hidden"
             ref={videoRef}
@@ -625,27 +579,26 @@ export default function Upload() {
               console.log(e.target.files[0]);
             }}
           />
-                    );
+        </div>
+      </div>
+    </div>
+  );
 }
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/uploadjs.png"/>
-
 لقد قمت بالتوضيح بالفعل على كل سطر من الكود حتى تتمكن من فهم ما يجري.
 
-احفظ الملف و قم بتجربته من هنا - <a href="http://localhost:3000/upload" target="_blank">localhost:3000/upload</a> - لقد انتهينا من صفحة نشر الفيديو. يجب أن تكون الآن قادرًا على تحميل مقاطع الفيديو إلى العقد الذكي.
+احفظ الملف و قم بتجربته من هنا - localhost:3000/upload - لقد انتهينا من صفحة نشر الفيديو. يجب أن تكون الآن قادرًا على تحميل مقاطع الفيديو إلى العقد الذكي.
 
-لا تنسى ربط محفظتك بالموقع قبل نشر الفيديو من خلال النقر على الزر "**ربط المحفظة**"
+لا تنسى ربط محفظتك بالموقع قبل نشر الفيديو من خلال النقر على الزر "ربط المحفظة"
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/upload-page.png"/>
+<img src="/courses/dapps/livepeer/upload-page.png">
 
-### إستدعاء الفيديوهات
-
+## إستدعاء الفيديوهات
 سنقوم بإستدعاء الفيديوهات من العقد الذكي في الصفحة الرئيسية بكل سهولة.
 
-ستذهب الى الملف **index.js** في المجلد pages وستقوم بإضافة هذا الكود هناك
+ستذهب الى الملف index.js في المجلد pages وستقوم بإضافة هذا الكود هناك
 
-```jsx
+```
 import { useState, useEffect } from 'react'
 import ContractAbi from "../../contract/artifacts/contracts/YouTube.sol/YouTube.json"
 import { ethers } from "ethers"
@@ -720,23 +673,25 @@ export default function home() {
                   ...{video?.author?.slice(0, 9)}{" "}
                   <BiCheck size="20px" color="green" className="ml-1" />
                 </p>
-                                            ))}
-            )
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 ```
+<img src="/courses/dapps/livepeer/indexjs.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/indexjs.png"/>
+احفظ الملف و قم بتجربته من هنا - localhost:3000 - لقد انتهينا من صفحة إستدعاء الفيديوهات من عقدك الذكي. يجب أن تكون الآن قادرًاعلى رؤية الفيديوهات التي قمت بنشرها على العقد الذكي الخاص بك.
 
-احفظ الملف و قم بتجربته من هنا - <a href="http://localhost:3000" target="_blank">localhost:3000</a> - لقد انتهينا من صفحة إستدعاء الفيديوهات من عقدك الذكي. يجب أن تكون الآن قادرًاعلى رؤية الفيديوهات التي قمت بنشرها على العقد الذكي الخاص بك.
+<img src="/courses/dapps/livepeer/home-page.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/home-page.png"/>
+## مشغل الفيديوهات
+من اجل تشغيل الفيديوهات اثناء النقر عليها في صفحة video. سنقوم اولا بالعمل على واجهة المشغل من خلال الذهاب إلى المجلد components وإنشاء ملف Player.js وإضافة هذا الكود هناك
 
-
-### مشغل الفيديوهات
-
-من اجل تشغيل الفيديوهات اثناء النقر عليها في صفحة video. سنقوم اولا بالعمل على واجهة المشغل من خلال الذهاب إلى المجلد components وإنشاء ملف **Player.js** وإضافة هذا الكود هناك
-
-```jsx
+```
 import React from "react"
 import { useAsset } from "@livepeer/react"
 import Plyr from "plyr-react"
@@ -761,15 +716,16 @@ export default function Player({ video }) {
             {video.category} •{" "}
             {new Date(video.createdAt.toString() * 1000).toLocaleString("ar-IN")}
           </p>
-                    );
+        </div>
+      </div>
+    </div>
+  );
 }
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/playerjs.png"/>
-
+<img src="/courses/dapps/livepeer/playerjs.png">
 ستذهب إلى المجلد pages من أجل إنشاء الملف video.js والذي سيقوم بعرض الفيديوهات من العقد الذكي وتشغليها. قم بإضافة هذا الكود هناك
 
-```jsx
+```
 import { useState, useEffect } from 'react'
 import Player from '../components/Player'
 import ContractAbi from "../../contract/artifacts/contracts/YouTube.sol/YouTube.json"
@@ -847,7 +803,8 @@ export default function VideoPage() {
             <div className="flex flex-col m-10 justify-between lg:flex-row">
               <div className="lg:w-4/6 w-6/6">
                 <Player video={video} />
-                            <div className="w-2/6">
+              </div>
+              <div className="w-2/6">
                 <h4 className="text-md font-bold text-black mr-5 mb-3">
                   فيديوهات مقترحة
                 </h4>
@@ -872,20 +829,27 @@ export default function VideoPage() {
                           ...{video?.author?.slice(0, 9)}{" "}
                           <BiCheck size="20px" color="green" className="ml-1" />
                         </p>
-                                                                            ))}
-                                    )}
-                    )
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/videojs.png"/>
+<img src="/courses/dapps/livepeer/videojs.png">
 
 احفظ الملف وانقر على أي مقطع فيديو متواجد في الشاشة الرئيسية. من المفترض أن تتم إعادة توجيهك إلى شاشة الفيديو وتشغيله بهذا الشكل:
 
-<img src="https://www.web3arabs.com/courses/dapps/livepeer/video-page.png"/>
+<img src="/courses/dapps/livepeer/video-page.png">
 
-تهانينا لقد انتهيت من الدرس يمكنك البدء في إضافة المزيد من الاشياء الى المشروع مثل شريط البحث عن الفيديوهات والمشاركة في تطوير الدرس على <a href="https://github.com/Web3Arabs/DApps-Course" target="_blank">GitHub</a>.
+تهانينا لقد انتهيت من الدرس يمكنك البدء في إضافة المزيد من الاشياء الى المشروع مثل شريط البحث عن الفيديوهات والمشاركة في تطوير الدرس على GitHub.
 
-يمكنك الوصول الى المشروع بشكل مباشر على <a href="https://github.com/Web3Arabs/YouTube-Clone" target="_blank"> GitHub من هنا</a>
+يمكنك الوصول الى المشروع بشكل مباشر على GitHub من هنا
 
-**كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://t.me/Web3ArabsDAO" target="_blank">**Telegram**</a> او <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">**Discord**</a> وسنكون أكثر من سعداء لمساعدتك!**
+## كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على Telegram او Discord وسنكون أكثر من سعداء لمساعدتك!
