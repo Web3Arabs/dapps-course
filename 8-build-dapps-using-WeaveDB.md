@@ -103,7 +103,8 @@ npx create-next-app .
 npm install ethers weavedb-sdk localforage ramda
 ```
 
-ستذهب الى مجلد styles وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
+ستذهب الى مجلد **app** وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
+
 
 ```css
 @tailwind base;
@@ -119,7 +120,8 @@ npm install ethers weavedb-sdk localforage ramda
 npm run dev
 ```
 
-الان اذهب الى الملف **index.js** وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
+الان اذهب الى الملف **page.js** في المجلد **app** وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
+
 
 ```jsx
 import { useState, useEffect } from 'react'
