@@ -4,10 +4,8 @@
 
 ## المتطلبات الاساسية للبدء في هذا الدرس:
 
-1. يمكنك التعامل مع لغة البرمجة JavaScript.
-2. انتهيت من قرأة درس اساسيات لغة Solidity.
-3. لقد قمت بإعداد محفظتك على Metamask.
-4. لقد قمت بتثبيت Node.js على حهاز الكمبيوتر الخاص بك.
+1. نتهيت من قرأة درس اساسيات لغة Solidity.
+2. لقد قمت بإعداد محفظتك على Metamask.
 
 ## إعداد المشروع
 
@@ -29,76 +27,101 @@ mkdir contract-tutorial & mkdir my-app
 
 ## العقد الذكي
 
-سنستخدم احد الادوات التي ستساعدنا في التعامل مع العقود الذكية وهي Hardhat. يعتبر Hardhat هي بيئة وإطار تطوير شبكة Ethereum مصمم للتعامل بشكل كامل مع لغة Solidity.
+سنستخدم أحد أقوى وأسرع الادوات التي ستساعدنا في التعامل مع العقود الذكية وهي Foundry. يعتبر Foundry هي بيئة وإطار تطوير شبكة Ethereum مصمم للتعامل بشكل كامل مع لغة Solidity.
 
-سنقوم بفتح المجلد **contract-tutorial** على terminal ونقوم بإضافة هذه الاوامر
+يمكنك إعداد وتثبيت أداة Foundry في جهازك بواسطة أحد المقالات لدينا من هنا.
+
+سنقوم بفتح المجلد contract-tutorial على terminal ونقوم بإنشاء مشروع Foundry بواسطة هذا الأمر:
+
 
 ```bash
 cd contract-tutorial
-npm init --yes
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox@2 dotenv
+forge init
+
 ```
 
-سنقوم الان بتشغيل تطبيق Hardhat
+سنقوم بحذف الملفات التلقائية بالمشروع التي لا نحتاجها عن طريق تشغيل هذا الأمر:
+
 
 ```bash
-npx hardhat
+rm src/Counter.sol script/Counter.s.sol test/Counter.t.sol
 ```
 
-<img src="https://www.web3arabs.com/courses/dapps/staking/npx-hardhat.png"/>
 
-#### سنلاحظ ان التطبيق يحتوي على 3 مجلدات رئيسية وهي:
+#### سنلاحظ ان التطبيق يحتوي على 4 مجلدات رئيسية وهي:
 
-1. contracts: الذي سنقوم من خلاله بكتابة العقود الذكية.
-2. scripts: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات.
-3. test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي.
+1-lib: يحتوي على المُشغل الاساسي للمشروع بالكامل ولن نقوم بالتعديل عليه على الإطلاق.
+2. contracts: الذي سنقوم من خلاله بكتابة العقود الذكية.
+3. scripts: والذي سنقوم من خلاله بالتعامل مع العقود الذكية او رفعها على الشبكات.
+4. test: والذي سنقوم من خلاله بإجراء اختبارات لعقدنا الذكي.
 
-## العقد الذكي
+يمكنك الان البدء في إنشاء عقدك الذكي. قم بإنشاء ملف بإسم Staking.sol في مجلد src:
 
-يمكنك الان البدء في إنشاء عقدك الذكي. قم بإنشاء ملف في مجلد contracts بإسم Staking.sol
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.24;
 
 contract Staking {
   uint256 private totalStaked;
+  // user -> eth
   mapping(address => uint256) public stakedAmounts;
-
+  // user -> time
+  mapping(address => uint256) public lastStakeTime;
+  
   event Staked(address indexed account, uint256 amount);
   event UnStaked(address indexed account, uint256 amount);
     
   /**
-    Stake تمثل مقدار الرموز أو الأثير الذي يريد المستخدم مشاركته في uint256 من النوع amount_  تأخذ الدالة وسيطة واحدة
+    تعمل الدالة على إرسال عملات الى العقد الذكي وإضافة الوقت الذي تم فيه إرسال العملات
 
-    أكبر من الصفر مما يضمن عدم قدرة المستخدم على إيداع كمية سلبية _amount مما إذا كان require تحقق البيانات المسبقة الأولى    
+    مما إذا كان المبلغ أكبر من الصفر require تعمل عملية التحقق    
 
-    الذي يتم إيداعه بواسطة المستخدم عن طريق ربط عنوانهم بالمبلغ الذي يملكونه _amount باستخدام stakedAmounts إليه كما يحدث الدالة تحديثًا على التناظر الذي يسمى _amount عن طريق إضافة totalStaked تحدث الدالة بعد ذلك تحديثًا لمتغير
+    stakedAmounts بحيث تقوم بإضافة المبلغ المرسل كما يحدث أيضاً المتغير الذي يسمى totalStaked تحدث الدالة بعد ذلك تحديثًا لمتغير
   */
-  function stake(uint256 _amount) public payable {
-    require(_amount > 0);
-    require(msg.value >= _amount, "Staked amount must match the value being sent.");
+  function stake() public payable {
+    require(msg.value > 0, "The value is zero.");
 
-    totalStaked += _amount;
-    stakedAmounts[msg.sender] += _amount;
-    (bool success, ) = payable(msg.sender).call{value: (msg.value - _amount)}("");
-    require(success, "Failed!");
-    emit Staked(msg.sender, _amount);
+    if (stakedAmounts[msg.sender] == 0) {
+      lastStakeTime[msg.sender] = block.timestamp;
+    }
+
+    totalStaked += msg.value;
+    stakedAmounts[msg.sender] += msg.value;
+    emit Staked(msg.sender, msg.value);
   }
     
   /**
-    وتأخذ معامل واحد وهو مقدار الرموز الذي يريد المستخدم إلغاء رهنها في العقد unstake الوظيفة تسمى
+    تعمل الدالة على إعادة جميع العملات التي أرسلها المستخدم إليه
 
-    بفرض أن لدى المستخدم الرموز المرهونة الكافية ستقوم الوظيفة بتحديث إجمالي المبلغ المرهون وطرح المبلغ المراد إلغاؤه من تعيين مقدار الرموز المرهونة للمستخدم
+    بفرض أن لدى المستخدم الرموز المرهونة الكافية ستقوم الدالة بتحديث إجمالي المبلغ المرهون ومعقدار الرموز المرهونة للمستخدم
+
+    ثم تقوم بالنهايه إرسال العملات إلى عنوان المستخدم
   */
-  function unstake() public payable {
+  function unstake() public {
     require(stakedAmounts[msg.sender] > 0, "Not enough staked amount to unstake.");
 
-    uint256 _amount = stakedAmounts[msg.sender];
-    payable(msg.sender).transfer(_amount);
-    totalStaked -= _amount;
-    stakedAmounts[msg.sender] -= _amount;
-    emit UnStaked(msg.sender, _amount);
+    uint256 amount = stakedAmounts[msg.sender];
+    totalStaked -= amount;
+    stakedAmounts[msg.sender] -= amount;
+    emit UnStaked(msg.sender, amount);
+
+    (bool sent, ) = msg.sender.call{value: amount}("");
+    require(sent, "Failed");
+  }
+
+  /**
+    تعمل الدالة على إجراء عملية حسابيه بالمكافئة التي يجب ان يحصل عليه المستخدم
+  */
+  function getReward() public view returns (uint256) {
+    uint256 timeElapsed = block.timestamp - lastStakeTime[msg.sender];
+    uint256 stakedAmountUser = stakedAmounts[msg.sender];
+    
+    if (stakedAmountUser == 0) {
+      return 0;
+    }
+    uint256 reward = (stakedAmountUser * timeElapsed) / (10**12);
+    return reward;
   }
 
   /**
@@ -112,6 +135,7 @@ contract Staking {
 
   fallback() external payable {}
 }
+
 ```
 
 <img src="https://www.web3arabs.com/courses/dapps/staking/staking-contract.png"/>
@@ -119,7 +143,22 @@ contract Staking {
 > كل ما تحتاجه الان لاكمال عقدك الذكي هو كتابة الوظائف التي تريد تشغليها في داخل العقد الذكي.
 
 يمكنك الان رفع عقدك الذكي بكل سهولة. سنقوم باستخدام شبكة الاختبارات وهي sepolia.
-اذهب الى المجلد scripts وقم بإنشاء ملف بإسم deploy.js (في حال هناك ملف بنفس الاسم قم بإزالة الاكواد التي فيه وإجعله بهذا الشكل):
+الان ستحتاج الى مزود عقدة يتيح لك الاتصال بالعديد من سلاسل الكتل المختلفة. يمكنك استخدام QuickNode كمزود للعقد الخاصة بك بكل سهولة.
+
+قم بإنشاء حساب على QuickNode من خلال النقر على Create account وإذا كان لديك حساب بالفعل قم بتسجيل الدخول مباشرة من خلال النقر على Sign in.
+<img src="https://www.web3arabs.com/courses/quicknode-home.png"/>
+
+بمجرد تسجيل الدخول سيتقم نقلك إلى لوحة التحكم هذه:
+<img src="/courses/quicknode-dashboard.png">
+
+
+سنقوم بالذهاب الى قسم Endpoints من خلال القسم الايسر ومن ثم النقر على الزر Create Endpoint من اجل إنشاء مزود عُقدة
+<img src="/courses/quicknode-endpoints.png">
+## سنقوم بإنشاء Endpoints بهذه الطريقة:
+
+1- سنقوم بإستخدام سلسلة Ethereum فلذلك سنقوم بتحديدها هكذا والنقر على الزر Continue:
+
+<img src="/courses/quicknode-select-chain.png">
 
 ```javascript
 const {ethers} = require("hardhat");
@@ -170,226 +209,228 @@ main().catch((error) => {
 
 <img src="https://www.web3arabs.com/courses/quicknode-select-chain.png"/>
 
-2- بما ان الغرض من الدرس هو التعلم فلذلك سنقوم بتحديد شبكة الإختبار **Sepolia** والنقر على الزر **Continue**:
+2- بما ان الغرض من الدرس هو التعلم فلذلك سنقوم بتحديد شبكة الإختبار Sepolia والنقر على الزر Continue:
+<img src="/courses/quicknode-select-network.png">
 
-<img src="https://www.web3arabs.com/courses/quicknode-select-network.png"/>
+3- سنقوم بالنقر على الزر Create Endpoint لإنشاء المزود:
 
-3- سنقوم بالنقر على الزر **Create Endpoint** لإنشاء المزود:
+<img src="/courses/quicknode-create.png">
+4- أخيراً - ستقوم بنسخ HTTP Provider لأننا سنحتاجه لاحقاً من اجل نشر عقدنا الذكي على شبكة Sepolia
+<img src="/courses/quicknode-keys.png">
 
-<img src="https://www.web3arabs.com/courses/quicknode-create.png"/>
+قم بإضافة HTTP Provider في ملف (.env)
 
-4- أخيراً - ستقوم بنسخ **HTTP Provider** لأننا سنحتاجه لاحقاً من اجل نشر عقدنا الذكي على شبكة **Sepolia**
-
-<img src="https://www.web3arabs.com/courses/quicknode-keys.png"/>
-
-**ملاحظة**: في حال لم تتمكن من إستخدام <a href="https://www.quicknode.com/?utm_source=web3-arabs" target="_blank">**QuickNode**</a> يمكنك تجربة مُزود آخر مثل <a href="https://www.infura.io/" target="_blank">**Infura**</a> - كُل ما يهم هو الحصول على **HTTP Provider**.
-
-ستقوم الان بنسخ **Private Key** الخاص بمحفظتك المشفرة عن طريق:
-
-1. فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين.
-2. النقر على زر **Account details** ومن ثم النقر على **Show private key**.
-3. قم بكتابة كلمة السر الخاصة بك ومن ثم سيتم عرض لك **private key** المرتبطة بحسابك.
-
-<img src="https://www.web3arabs.com/courses/private-key.png"/>
-
-قم بإضافة كل ما قمت بنسخه في ملف (env.)
-
-```js
+```
 QUICKNODE_HTTP_PROVIDER="add-quicknode-http-url-here"
-
-PRIVATE_KEY="add-private-key-here"
 ```
 
-قم بفتح ملف **hardhat.config.js** وقم باستيراد المفاتيح المتواجدة في ملف <span dir="ltr">**.env**</span> وقم بإختيار الشبكة التي تريد استخدامها لرفع العقد الذكي الخاص بك ولكننا هنا سنستخدم شبكة **sepolia** فلذلك سنقوم بتحديدها
 
-```javascript
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config({ path: ".env" });
+ستقوم الان بنسخ Private Key الخاص بمحفظتك المشفرة عن طريق:
 
-const QUICKNODE_HTTP_PROVIDER = process.env.QUICKNODE_HTTP_PROVIDER;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+1-فتح المحفظة الخاصة بك ومن ثم النقر على الثلاث النقاط التي في الاعلى على اليمين.
+2-النقر على زر Account details ومن ثم النقر على Show private key.
+3-قم بكتابة كلمة السر الخاصة بك ومن ثم سيتم عرض لك private key المرتبطة بحسابك.
+<img src="/courses/private-key.png">
+في حال لم تقوم بإضافة المحفظة من قبل، ستقوم بإضافة معلومات محفظتك في جهازك عن طريق المفتاح الخاص (Private Key) الذي قمت بنسخه عن طريق تشغيل هذا الأمر:
 
-module.exports = {
-  solidity: "0.8.19",
-  networks: {
-    sepolia: {
-      url: QUICKNODE_HTTP_PROVIDER,
-      accounts: [PRIVATE_KEY],
-    },
-  },
-}
-```
+ستقوم أولاً بإضافة العنوان الخاص ومن ثم كلمة سر خاصه بك وتذكرها جيداً، لأن سيتم مطالبتك بها في كل مره تريد استخدام محفظتك في نشر عقد ذكي.
 
-قم بتجميع العقد الذكي الخاص بك الان. تأكد من انك في مسار تطبيقك (contract-tutorial) وقم بتشغيل هذا الامر
+``` cast wallet import deployer --interactive ```
+<img src="/courses/dapps/todolist/add-deployer.png">
 
-```bash
-npx hardhat compile
-```
 
-**ملاحظة**: يمكنك الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة **Sepolia** من <a href="https://www.web3arabs.com/faucets/sepolia" target="_blank">**صنبور Web3Arabs هنا**</a> - قم بتوصيل محفظتك بالصنبور وإنقر على الزر **إرسال**.
+ستقوم بالتأكيد عن طريق تشغيل هذا الأمر:
 
-<img src="https://www.web3arabs.com/courses/faucet-sepolia.png"/>
+``` cast wallet list ```
+
+قم بتجميع العقد الذكي الخاص بك الان. تأكد من انك في مسار تطبيقك (contract-tutorial) وقم بتشغيل هذا الامر:
+
+``` forge build ```
+
+## ملاحظة:
+يمكنك الحصول على بعض العملات التي تساعدك في اختبار ونشر تطبيقاتك على شبكة Sepolia من صنبور Web3Arabs هنا - قم بتوصيل محفظتك بالصنبور وإنقر على الزر إرسال.
+<img src="/courses/faucet-sepolia.png">
+
+الان ستقوم بتفعيل المتغير المتواجد في ملف .env في terminal من أجل إستخدامها في الخطوة القادمة:
+
+``` source .env ```
 
 حان وقت نشر عقدك الذكي :) قم بكتابة هذا الامر
 
-```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
+``` forge create ./src/Staking.sol:Staking --rpc-url $QUICKNODE_HTTP_PROVIDER --account deployer ```
 
-<img src="https://www.web3arabs.com/courses/dapps/staking/contract-deployed.png"/>
-
-قم بحفظ عنوان عقدك الذكي حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
+قم بنسخ عنوان عقدك الذكي من أجل إجتياز الاختبار في الاسفل وحفظه حتى نتمكن من استخدامه اثناء جعله يعمل في الواجهة الامامية.
 
 ## ربط المشروع بالواجهة الأمامية بإستخدام Next.js ومكتبة Web3.js
-
 في هذا الدرس سنقوم بإستخدام إطار العمل Next.js و TailwindCSS من اجل بناء واجهة الموقع.
 
-1. قم بتشغيل هذا الامر في المجلد **my-app** من اجل إنشاء مشروع nextjs
+1- قم بتشغيل هذا الامر في المجلد my-app من اجل إنشاء مشروع nextjs
 
-```bash
-npx create-next-app .
+``` npx create-next-app . ```
+<img src="/courses/dapps/staking/create-nextjs.png">
+
+
+2- تثبيت مكتبة Web3.js
+
+``` npm install web3@1.10.0 ```
+
+ستذهب الى مجلد app وستقوم بفتح الملف globals.css وستبقي هذه الاوامر في الملف
+
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/staking/create-nextjs.png"/>
-
-2. تثبيت مكتبة Web3.js
-
-```bash
-npm install web3@1.10.0
-```
-
-ستذهب الى مجلد styles وستقوم بفتح الملف **globals.css** وستبقي هذه الاوامر في الملف
-
-```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 ```
+<img src="/courses/dapps/staking/globals-css.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/staking/globals-css.png"/>
+3- عليك الان الوصول الى العقد الذكي من خلال إضافة address العقد الذكي و ABI. ستقوم بإنشاء ملف بإسم info.js في مشروع next.js بعد إنشاء ملف info.js ستقوم بنسخ هذا وإضافة ما يتعلق بعقد الذكي مثل address و ABI
 
-3. عليك الان الوصول الى العقد الذكي من خلال إضافة address العقد الذكي و ABI. ستقوم بإنشاء ملف بإسم **info.js** في مشروع next.js
-بعد إنشاء ملف **info.js** ستقوم بنسخ هذا وإضافة ما يتعلق بعقد الذكي مثل address و ABI
-
-```javascript
+```
 // قم بإضافة عنوان عقدك الذكي
 export const contractAddress = "0x123456789abcdef0123456xxxxxxxxxxxxxxx"
 
-// hardhat في مشروع artifacts/contracts المتعلقة بعقدك الذكي من مجلد ABI قم بنسخ
+// foundry في مشروع out المتعلقة بعقدك الذكي من مجلد ABI قم بنسخ
 export const contractABI = [
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "Staked",
-    "type": "event"
+    "type": "fallback",
+    "stateMutability": "payable"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "UnStaked",
-    "type": "event"
+    "type": "receive",
+    "stateMutability": "payable"
   },
   {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
-  {
+    "type": "function",
+    "name": "getReward",
     "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getTotalStaked",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "stake",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "stakedAmounts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
-    "name": "unstake",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
-    "stateMutability": "payable",
-    "type": "receive"
+    "type": "function",
+    "name": "lastStakeTime",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "stake",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "stakedAmounts",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "unstake",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "Staked",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "UnStaked",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
   }
 ]
 ```
+<img src="/courses/dapps/staking/infojs.png">
 
-<img src="https://www.web3arabs.com/courses/dapps/staking/infojs.png"/>
+4- الان اذهب الى الملف page.js في المجلد app وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
 
-4. الان اذهب الى الملف **index.js** في المجلد pages وقم بلصق هذا الكود ومتابعة الشرح من التعليقات المتواجدة اعلى كل سطر.
-
-```jsx
-import { useEffect } from 'react';
+```
+"use client"
+import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { contractAddress, contractABI } from '../info';
 
 export default function Home() {
   // Ethereum الاتصال بشبكة
   const web3 = new Web3(Web3.givenProvider);
+  const [reward, setReward] = useState(0)
 
   // يعمل هذا على اخذ مثيل للعقد بحيث نتمكن من التفاعل مع البلوكتشين
   const contract = new web3.eth.Contract(contractABI, contractAddress)
@@ -399,7 +440,7 @@ export default function Home() {
     // Ethereum استدعاء الحساب المتصل بشبكة
     const accounts = await web3.eth.getAccounts();
     // (يمكنك تحديدها كما تريد) ETH التي تم كتابتها في العقد الذكي وإرسال مبلغ معين من stake التفاعل مع الدالة
-    const result = await contract.methods.stake(web3.utils.toWei("0.005", "ether")).send({ from: accounts[0], value: web3.utils.toWei("0.005", "ether") });
+    const result = await contract.methods.stake().send({ from: accounts[0], value: web3.utils.toWei("0.005", "ether") });
     // طباعة النتيجة
     console.log(result);
   }
@@ -414,6 +455,17 @@ export default function Home() {
     console.log(result);
   }
 
+  // تعمل هذه الدالة بإظهار المكافئات
+  async function getReward() {
+    // Ethereum استدعاء الحساب المتصل بشبكة
+    const accounts = await web3.eth.getAccounts();
+    // التي تم كتابتها في العقد الذكي getReward التفاعل مع الدالة
+    const result = await contract.methods.getReward().call({ from: accounts[0] });
+    setReward(result)
+    // طباعة النتيجة
+    console.log(result);
+  }
+
   // DApp تعمل هذه الدالة على عملية اتصال المحفظة بتطبيق
   const connect = async () => {
     const accounts = await window.ethereum.enable()
@@ -424,6 +476,7 @@ export default function Home() {
   // في هذه الحالة كلما تغيرت قيم الوظيفتين سيتم استدعاء هذا التغيير مباشرة
   useEffect(() => {
     connect()
+    getReward()
   }, [])
 
   return (
@@ -439,25 +492,21 @@ export default function Home() {
         className='bg-black text-white rounded-md p-1 mt-2'
         onClick={withdraw}
       >Withdraw</button>
+
+      <h1 className='mt-4 text-lg'>Your rewards: ({reward}) TOKEN</h1> 
     </div>
   )
 }
 ```
-
-<img src="https://www.web3arabs.com/courses/dapps/staking/indexjs.png"/>
+<img src="/courses/dapps/staking/indexjs.png">
 
 يمكنك تجربة تطبيقك الان
 
-```bash
-npm run dev
-```
+``` npm run dev ```
 
 إنه يعمل, لقد انتهيت من بناء تطبيق DApps بنجاح 🥳🥳
 
-<div className="flex justify-center items-center">
-<img src="https://www.web3arabs.com/courses/dapps/staking/app.png"/>
-</div>
 
-يمكنك الوصول الى المشروع بشكل مباشر على <a href="https://github.com/Web3Arabs/Staking-Dapp" target="_blank"> GitHub من هنا</a>
+يمكنك الوصول الى المشروع بشكل مباشر على GitHub من هنا
 
-كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على <a href="https://t.me/Web3ArabsDAO" target="_blank">Telegram</a> او <a href="https://discord.gg/ykgUvqMc4Q" target="_blank">Discord</a> وسنكون أكثر من سعداء لمساعدتك!
+كما هو الحال دائمًا، إذا كانت لديك أي أسئلة أو شعرت بالتعثر أو أردت فقط أن تقول مرحبًا، فقم بالإنضمام على Telegram او Discord وسنكون أكثر من سعداء لمساعدتك!
